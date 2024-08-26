@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable with Search and Phone Validation</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- DataTables CSS -->
+    <link href="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <!-- Search Input -->
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search table...">
+        </div>
+
+        <!-- Phone Number Input -->
+        <div class="mb-3">
+            <label for="phone" class="form-label">Phone:</label>
+            <input type="text" id="phone" class="form-control">
+            <span id="phone-error" class="text-danger"></span>
+        </div>
+
+        <!-- DataTable -->
+        <table id="dataTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>john@example.com</td>
+                    <td>9876543210</td>
+                </tr>
+                <tr>
+                    <td>Jane Smith</td>
+                    <td>jane@example.com</td>
+                    <td>8765432109</td>
+                </tr>
+                <tr>
+                    <td>Bob Johnson</td>
+                    <td>bob@example.com</td>
+                    <td>7654321098</td>
+                </tr>
+                <tr>
+                    <td>Alice Williams</td>
+                    <td>alice@example.com</td>
+                    <td>6543210987</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"
+        integrity="sha512-3gJwYpMe3QewGELv8k/BX9vcqhryRdzRMxVfq6ngyWXwo03GFEzjsUm8Q7RZcHPHksttq7/GFoxjCVUjkjvPdw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"
+        integrity="sha512-3dZ9wIrMMij8rOH7X3kLfXAzwtcHpuYpEgQg1OA4QAob1e81H8ntUQmQm3pBudqIoySO5j0tHN4ENzA6+n2r4w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/v/bs5/dt-1.13.4/datatables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable
+            $('#dataTable').DataTable({
+                order: [0, 'desc']
+            });
+
+            // Table search functionality
+            $('#searchInput').on('input', function () {
+                const searchTerm = this.value.toLowerCase();
+                $('#dataTable tbody tr').each(function () {
+                    const row = $(this);
+                    let match = false;
+                    row.find('td').each(function () {
+                        if ($(this).text().toLowerCase().includes(searchTerm)) {
+                            match = true;
+                        }
+                    });
+                    row.toggle(match);
+                });
+            });
+
+            // Phone number validation
+            $('#phone').on('input', function () {
+                const phoneNumber = $(this).val();
+                const validPhoneNumber = /^[6-9]\d{9}$/;
+                if (validPhoneNumber.test(phoneNumber)) {
+                    $('#phone-error').text('');
+                    $(this).get(0).setCustomValidity('');
+                } else {
+                    $('#phone-error').text('Please enter a valid phone number starting with 6, 7, 8, or 9');
+                    $(this).get(0).setCustomValidity('Invalid phone number');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
